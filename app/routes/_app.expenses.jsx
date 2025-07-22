@@ -1,6 +1,6 @@
-import {Outlet} from "@remix-run/react";
-import expenesesStyle from '../styles/expenses.css?url';
+import {Link, Outlet} from "@remix-run/react";
 import ExpensesList from "../components/expenses/ExpensesList.jsx";
+import {FaPlus, FaDownload} from "react-icons/fa";
 
 const sampleExpenses = [
     { id: 1, title: "Groceries", amount: 120.50, date: "2025-01-15" },
@@ -15,22 +15,27 @@ const sampleExpenses = [
     { id: 10, title: "Utilities", amount: 150.00, date: "2025-01-03" }
 ];
 
-export const links = ()=>{
-    return [
-        {
-            rel: 'stylesheet',
-            href:expenesesStyle
 
 
-        }
-    ]
-}
-
-export default function Expenses() {
+export default function _appExpenses() {
     return (
         <main>
             <Outlet/>
             <main>
+                <section id={"expenses-actions"}>
+                    <Link to="add">
+                        <FaPlus/>
+                        <span>
+                            Add Expense
+                        </span>
+                    </Link>
+                    <a href={"/expenses/raw"}>
+                        <FaDownload/>
+                        <span>
+                            Load Raw Data
+                        </span>
+                    </a>
+                </section>
                 <ExpensesList expenses={sampleExpenses} />
             </main>
         </main>

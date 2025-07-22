@@ -14,7 +14,7 @@ const sampleExpenses = [
     { id: 10, title: "Utilities", amount: 150.00, date: "2025-01-03" }
 ];
 
-export default function Expenses_Analysis() {
+export default function _appExpenses_Analysis() {
     return (
         <main>
             <Charts expenses={sampleExpenses} />

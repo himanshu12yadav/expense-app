@@ -7,7 +7,7 @@ export const links = ()=>{
     }]
 }
 
-export default function Auth(){
+export default function _marketingAuth(){
     return (
         <AuthForm />
     )
