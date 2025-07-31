@@ -1,44 +1,89 @@
-import {Link, Outlet} from "@remix-run/react";
-import ExpensesList from "../components/expenses/ExpensesList.jsx";
-import {FaPlus, FaDownload} from "react-icons/fa";
+import {isRouteErrorResponse, Link, Outlet, useLoaderData, useRouteError} from '@remix-run/react';
+import ExpensesList from '../components/expenses/ExpensesList.jsx';
+import {FaDownload, FaPlus} from 'react-icons/fa';
+import {getExpenses} from '../data/expenses.server.js';
 
-const sampleExpenses = [
-    { id: 1, title: "Groceries", amount: 120.50, date: "2025-01-15" },
-    { id: 2, title: "Gas", amount: 65.00, date: "2025-01-14" },
-    { id: 3, title: "Coffee", amount: 4.25, date: "2025-01-13" },
-    { id: 4, title: "Rent", amount: 1200.00, date: "2025-01-01" },
-    { id: 5, title: "Internet", amount: 80.00, date: "2025-01-05" },
-    { id: 6, title: "Lunch", amount: 12.75, date: "2025-01-12" },
-    { id: 7, title: "Phone Bill", amount: 55.00, date: "2025-01-10" },
-    { id: 8, title: "Gym Membership", amount: 35.00, date: "2025-01-08" },
-    { id: 9, title: "Movies", amount: 25.00, date: "2025-01-11" },
-    { id: 10, title: "Utilities", amount: 150.00, date: "2025-01-03" }
-];
-
-
+import Error from '../components/util/Error';
+import styles from '../styles/error.css?url';
 
 export default function _appExpenses() {
-    return (
-        <main>
-            <Outlet/>
-            <main>
-                <section id={"expenses-actions"}>
-                    <Link to="add">
-                        <FaPlus/>
-                        <span>
-                            Add Expense
-                        </span>
-                    </Link>
-                    <a href={"/expenses/raw"}>
-                        <FaDownload/>
-                        <span>
-                            Load Raw Data
-                        </span>
-                    </a>
-                </section>
-                <ExpensesList expenses={sampleExpenses} />
-            </main>
-        </main>
+  const loadData = useLoaderData();
+  const expenses = loadData || [];
 
-    )
+  const hasExpenses = expenses && expenses.length > 0;
+
+  return (
+    <main>
+      <Outlet />
+      <main>
+        <section id={'expenses-actions'}>
+          <Link to="add">
+            <FaPlus />
+            <span>Add Expense</span>
+          </Link>
+          <a href={'/expenses/raw'}>
+            <FaDownload />
+            <span>Load Raw Data</span>
+          </a>
+        </section>
+        {
+          hasExpenses && <ExpensesList expenses={expenses} />
+        }
+        {
+          !hasExpenses && (
+              <section className={"error-container"}>
+                <h2>No Expenses Found</h2>
+                <p>Start <Link to={'add'}>adding some</Link> today.</p>
+              </section>
+            )
+        }
+
+      </main>
+    </main>
+  );
 }
+
+export const loader = async () => {
+  return await getExpenses();
+};
+
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <main className="error-container">
+        <Error title={`${error.status} ${error.statusText}`}>
+          <p>{error.data?.message || 'An error occurred.'}</p>
+          <p>
+            Back To <Link to="/expenses">Safety</Link>
+          </p>
+        </Error>
+      </main>
+    );
+  }
+
+  let errorTitle = 'An error occurred';
+  let errorMessage = 'An unknown error has occurred.';
+
+  if (error instanceof Error) {
+    errorTitle = error.name;
+    errorMessage = error.message;
+  }
+
+  return (
+    <main className="error-container">
+      <Error title={errorTitle}>
+        <p>{errorMessage}</p>
+        <p>
+          Back To <Link to="/expenses">Safety</Link>
+        </p>
+      </Error>
+    </main>
+  );
+};
+
+export function links() {
+  return [{ rel: 'stylesheet', href: styles }];
+}
+

@@ -1,7 +1,6 @@
 import ExpenseListItem from './ExpenseListItem.jsx';
 
 function ExpensesList({ expenses }) {
-
   return (
     <ol id="expenses-list">
       {expenses.map((expense) => (
