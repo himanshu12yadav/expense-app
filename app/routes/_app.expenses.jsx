@@ -5,6 +5,7 @@ import {getExpenses} from '../data/expenses.server.js';
 
 import Error from '../components/util/Error';
 import styles from '../styles/error.css?url';
+import {requireUserSession} from "../data/auth.server.js";
 
 export default function _appExpenses() {
   const loadData = useLoaderData();
@@ -43,8 +44,10 @@ export default function _appExpenses() {
   );
 }
 
-export const loader = async () => {
-  return await getExpenses();
+export const loader = async ({request}) => {
+  const userId = await requireUserSession(request)
+
+  return await getExpenses(userId);
 };
 
 export const ErrorBoundary = () => {

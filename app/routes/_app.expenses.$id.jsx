@@ -48,6 +48,23 @@ export default function ExpensesId() {
   );
 }
 
+export const meta = ({matches, params})=>{
+
+  const route = matches.filter(({id}) => id === 'routes/_app.expenses');
+
+
+  const expense = route[0].data.find(({id}) => id === params.id);
+
+  console.log(expense);
+
+  return [
+    {
+      title: expense.title,
+      description: 'Manage Expense list.',
+    }
+  ]
+}
+
 /*
 export const loader = async ({ params }) => {
   if (!params.id) {

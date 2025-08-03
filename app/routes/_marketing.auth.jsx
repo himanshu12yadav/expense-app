@@ -1,7 +1,7 @@
 import authStyles from '../styles/auth.css?url';
 import AuthForm from '../components/auth/AuthForm';
 import {validateCredentials} from "../data/validation.server.js";
-import {login, signup} from "../data/auth.server.js.jsx";
+import {login, signup} from "../data/auth.server.js";
 import {useRouteError} from "@remix-run/react";
 import Error from "../components/util/Error.jsx";
 export const links = ()=>{

@@ -3,6 +3,7 @@ import Modal from '../components/util/Modal.jsx';
 import { redirect, useNavigate } from '@remix-run/react';
 import { addExpense } from '../data/expenses.server.js';
 import { validateExpenseInput } from '../data/validation.server.js';
+import {requireUserSession} from "../data/auth.server.js";
 
 export default function AddExpensesPage() {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ export default function AddExpensesPage() {
 }
 
 export const action = async ({ request }) => {
+
+  const userId = await requireUserSession(request);
+
   const formData = await request.formData();
   const expenseData = Object.fromEntries(formData);
 
@@ -32,7 +36,7 @@ export const action = async ({ request }) => {
   }
 
   try {
-    await addExpense(expenseData);
+    await addExpense(expenseData, userId);
     return redirect('/expenses');
   } catch (error) {
     console.error('Error adding expense:', error);

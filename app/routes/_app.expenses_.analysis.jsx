@@ -4,6 +4,7 @@ import {getExpenses} from "../data/expenses.server.js";
 import {isRouteErrorResponse, json, Link, useLoaderData, useRouteError} from "@remix-run/react";
 import Error from '../components/util/Error';
 import styles from '../styles/error.css?url';
+import {requireUserSession} from "../data/auth.server.js";
 
 export default function _appExpenses_Analysis() {
 
@@ -17,8 +18,11 @@ export default function _appExpenses_Analysis() {
     )
 }
 
-export const loader = async ()=>{
-    const expenses = await getExpenses();
+export const loader = async ({request})=>{
+
+    const userId = await requireUserSession(request)
+
+    const expenses = await getExpenses(userId);
     if (!expenses || !expenses.length) {
         throw json({
             message:'Could not load expenses for the requested analysis for this page.',

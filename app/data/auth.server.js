@@ -74,3 +74,39 @@ export async function login({email, password}){
     return createUserSession(existingUser.id, '/expenses');
 
 }
+
+export async function getUserFromSession(request){
+    const session = await sessionStorage.getSession(
+        request.headers.get('Cookie')
+    )
+
+    const userId = session.get('userId');
+
+    if (!userId) {
+        return null;
+    }
+
+    return userId;
+
+}
+
+export async function destroyUserSession(request){
+    const session = await sessionStorage.getSession(request.headers.get('Cookie'));
+
+    return redirect("/",{
+        headers:{
+            'Set-Cookie':await sessionStorage.destroySession(session)
+        }
+    });
+
+}
+
+export async function requireUserSession(request){
+    const userId = await getUserFromSession(request);
+    if (!userId) {
+        throw redirect('/auth?mode=login');
+    }
+
+    return userId;
+
+}

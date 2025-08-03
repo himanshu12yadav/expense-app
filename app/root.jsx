@@ -44,7 +44,7 @@ function Document({title, children}){
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
-        <title>{title}</title>
+        { title && <title>{title}</title>}
         <link
             href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap"
             rel="stylesheet"
@@ -108,4 +108,14 @@ export default function App() {
       </Document>
 
   );
+}
+
+export const meta = ()=>{
+  return [{
+    charSet: "utf-8",
+    title: (
+        "Remix Expenses App"
+    ),
+    viewport: "width=device-width, initial-scale=1",
+  }]
 }
