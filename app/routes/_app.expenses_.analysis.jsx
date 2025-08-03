@@ -9,8 +9,6 @@ export default function _appExpenses_Analysis() {
 
     const expenses = useLoaderData();
 
-
-
     return (
         <main>
             <Charts expenses={expenses} />
@@ -33,6 +31,8 @@ export const loader = async ()=>{
 
     return expenses;
 }
+
+
 
 export const ErrorBoundary = () => {
   const error = useRouteError();
