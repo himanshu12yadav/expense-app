@@ -65,3 +65,10 @@ export function ErrorBoundary(){
         </>
     )
 }
+
+export const headers = ({parentHeaders})=>{
+
+    return {
+        'Cache-Control': parentHeaders.get('Cache-Control'),
+    }
+}

@@ -5,3 +5,6 @@ node_modules
 .env
 ./package-lock.json
 /generated/prisma
+CLAUDE.md
+
+.idea

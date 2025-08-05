@@ -43,4 +43,18 @@ export default function Index() {
     );
 }
 
-export function meta() {}
+export function meta() {
+    return [
+        {
+            name: 'Marketing',
+            content:'Marketing'
+        }
+    ]
+}
+
+export const headers = ({parentHeaders})=>{
+
+    return {
+        'Cache-Control': parentHeaders.get('Cache-Control'),
+    }
+}

@@ -34,3 +34,9 @@ export const meta = ()=>{
         }
     ]
 }
+
+export const headers = ()=>{
+    return {
+        'Cache-Control': 'max-age=3600'
+    }
+}

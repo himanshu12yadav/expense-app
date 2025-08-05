@@ -45,3 +45,19 @@ export function meta() {
     description: 'See our pricing plans and choose the one that fits you best.'
   }];
 }
+
+export const headers = ({
+    loaderHeaders,
+    parentHeaders,
+    actionHeaders,
+    errorHeaders,
+                        })=>{
+
+    return {
+        'Cache-Control': parentHeaders.get('Cache-Control'),
+    }
+}
+
+export const handle = {
+    disableJS: true,
+}

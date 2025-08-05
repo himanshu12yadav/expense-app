@@ -4,7 +4,9 @@ import {
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration, useRouteError,
+  ScrollRestoration,
+  useRouteError,
+  isRouteErrorResponse, useMatches,
 } from "@remix-run/react";
 
 
@@ -29,15 +31,23 @@ export const links = () => [
   },
 ];
 
-export function Layout() {
+export function Layout({ children }) {
   return (
     <Document>
-      <Outlet/>
+      {children}
     </Document>
   );
 }
 
 function Document({title, children}){
+
+  const matches = useMatches();
+  console.log(matches);
+
+  const disableJS = matches.some(match => match.handle?.disableJS);
+
+
+
   return (
       <html lang="en">
       <head>
@@ -55,7 +65,10 @@ function Document({title, children}){
 
       {children}
       <ScrollRestoration />
-      <Scripts />
+      {
+        !disableJS && <Scripts />
+      }
+
       </body>
       </html>
   )
@@ -102,12 +115,7 @@ export const ErrorBoundary = () => {
 
 
 export default function App() {
-  return (
-      <Document>
-        <Outlet />
-      </Document>
-
-  );
+  return <Outlet />;
 }
 
 export const meta = ()=>{
@@ -118,4 +126,14 @@ export const meta = ()=>{
     ),
     viewport: "width=device-width, initial-scale=1",
   }]
+}
+
+export const headers = ()=>{
+  return {
+    'Cache-Control': 'max-age=3600'
+  }
+}
+
+export const handle = {
+  disableJS: true,
 }

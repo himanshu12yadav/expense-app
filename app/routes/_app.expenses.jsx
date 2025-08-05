@@ -1,4 +1,4 @@
-import {isRouteErrorResponse, Link, Outlet, useLoaderData, useRouteError} from '@remix-run/react';
+import {isRouteErrorResponse, json, Link, Outlet, useLoaderData, useRouteError} from '@remix-run/react';
 import ExpensesList from '../components/expenses/ExpensesList.jsx';
 import {FaDownload, FaPlus} from 'react-icons/fa';
 import {getExpenses} from '../data/expenses.server.js';
@@ -47,7 +47,13 @@ export default function _appExpenses() {
 export const loader = async ({request}) => {
   const userId = await requireUserSession(request)
 
-  return await getExpenses(userId);
+  const expenses = await await getExpenses(userId)
+
+  return json(expenses, {
+    headers:{
+      'Cache-Control': 'max-age=3',
+    }
+  }) ;
 };
 
 export const ErrorBoundary = () => {
@@ -90,3 +96,8 @@ export function links() {
   return [{ rel: 'stylesheet', href: styles }];
 }
 
+export const headers = ({loaderHeaders})=>{
+  return {
+    'Cache-Control': loaderHeaders.get('Cache-Control'),
+  }
+}
